@@ -1,6 +1,6 @@
 module OilFetcher
   class Configuration
-    attr_accessor :uri, :logger
+    attr_accessor :uri, :logger, :proxy_host, :proxy_port
 
     def initialize
       @uri = "https://www.quandl.com/api/v1/datasets/CHRIS/ICE_B1.json?rows=1"
