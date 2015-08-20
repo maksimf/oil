@@ -28,6 +28,8 @@
     OilFetcher.configure |config| do
       config.uri = "www.example.com"
       config.logger = mylogger
+      config.proxy_host = 'proxy'
+      config.proxy_port = 8080
     end
 
 Ожидается, что по адресу `uri` будет json вида

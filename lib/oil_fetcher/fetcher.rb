@@ -3,7 +3,11 @@ require 'json'
 module OilFetcher
   class Fetcher
     def call
-      json = fetch_json OilFetcher.configuration.uri
+      json = fetch_json(
+        OilFetcher.configuration.uri,
+        OilFetcher.configuration.proxy_host,
+        OilFetcher.configuration.proxy_port
+      )
       return unless json
 
       Oil.new(extract_params(json))
@@ -11,9 +15,10 @@ module OilFetcher
 
     private
 
-    def fetch_json(uri)
+    def fetch_json(uri, proxy_host, proxy_port)
       uri = URI(uri)
-      file = Net::HTTP.get uri
+      http = Net::HTTP::Proxy(proxy_host, proxy_port)
+      file = http.get(uri)
       return unless file
 
       JSON.parse file
