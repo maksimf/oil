@@ -26,10 +26,12 @@
 ## Конфигурация
 
     OilFetcher.configure |config| do
-      config.uri = "www.example.com"
+      config.uri = "https://www.example.com"
       config.logger = mylogger
       config.proxy_host = 'proxy'
       config.proxy_port = 8080
+      config.use_ssl = true
+      config.skip_ssl_verification = true
     end
 
 Ожидается, что по адресу `uri` будет json вида

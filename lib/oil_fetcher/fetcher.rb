@@ -3,11 +3,9 @@ require 'json'
 module OilFetcher
   class Fetcher
     def call
-      json = fetch_json(
-        OilFetcher.configuration.uri,
-        OilFetcher.configuration.proxy_host,
-        OilFetcher.configuration.proxy_port
-      )
+      @config = OilFetcher.configuration
+      json = fetch_json
+
       return unless json
 
       Oil.new(extract_params(json))
@@ -15,10 +13,15 @@ module OilFetcher
 
     private
 
-    def fetch_json(uri, proxy_host, proxy_port)
-      uri = URI(uri)
-      http = Net::HTTP::Proxy(proxy_host, proxy_port)
-      file = http.get(uri)
+    def fetch_json
+      uri = URI(@config.uri)
+      http = Net::HTTP::new(uri.host, uri.port, @config.proxy_host, @config.proxy_port)
+
+      http.use_ssl = true if @config.use_ssl
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if @config.skip_ssl_verification
+
+      file = http.get(uri).body
+
       return unless file
 
       JSON.parse file
